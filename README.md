@@ -1,66 +1,61 @@
 # Autonomous Game Factory
 
-Godot + Python で、**企画 → バリエーション生成 → ゲーム実装 → QA → ビルド準備 → ストア素材 → マーケティング素材 → 販売データの学習**までを一つのリポジトリにまとめるゲーム量産基盤です。
+Godot + Python で、**企画 → バリエーション生成 → ゲーム実装 → QA → 実行/ビルド → ストア素材 → マーケティング素材 → 販売データ学習**までを一つにしたゲーム量産基盤です。
 
-> 重要: `publish` 系は **dry-run が既定**です。Steam / itch.io の契約、審査、価格確定、最終公開、支払い設定をこのリポジトリが勝手に実行することはありません。
+> `publish` 系は **dry-run / 明示ゲートが既定**です。Steam / itch.io の契約、審査、価格確定、支払い設定、最終公開を勝手に実行しません。
 
-## できること
+## Core pipeline
 
-- `survivor` / `dodger` / `collector` の3系統から企画を大量生成
-- Godot 4 向けのプレイ可能な最小ゲームをパラメータ駆動で生成
-- タイトル、フック、難易度、速度、敵密度、色、価格仮説を変えてポートフォリオ化
-- 企画重複をfingerprintで抑制
-- Python静的QA + Godotがある環境ではheadless起動テスト
-- Steam / itch.io 用のリリースパックを生成
-- ストア説明、短文コピー、SNS投稿案、トレーラー構成、プレスキットを自動生成
-- 売上・Wishlist・Conversion・Review・PlaytimeのCSVから次回企画のモード配分を学習
-- 許可リストに登録したOSSテンプレートをcloneし、commitとlicenseファイルをlock記録
+- GameSpecを大量生成（決定論的generator / 外部LLMのどちらも可）
+- `survivor` / `dodger` / `collector` のプレイ可能なGodot 4ゲームへ変換
+- fingerprintで企画重複を抑制
+- 自動rankingで上位候補だけ実装
+- Python QA + Godot headless smoke test
+- Windows / Linux / Web export
+- Steam / itch.io release pack生成
+- Store copy / SNS / trailer shot list / asset manifest生成
+- Wishlist / conversion / review / playtime / refund から次回企画配分を学習
+- 許可リストのOSSをcloneし、commit/licenseを `vendor.lock.json` に固定
 
-## 30秒スタート
+## Start
 
 ```bash
-python -m game_factory.cli ideate --count 12 --seed 42 --out ideas.json
 python -m game_factory.cli batch --count 12 --keep 3 --seed 42 --out generated
-python -m game_factory.cli qa generated/neon-echo
+python -m game_factory.cli qa generated/<slug>
+python -m game_factory.cli run generated/<slug>
+python -m game_factory.cli build generated/<slug> --targets windows linux web
+python -m game_factory.cli pack generated/<slug> --itch-target yourname/<slug>
 ```
 
-GodotがPATHにある場合:
-
-```bash
-python -m game_factory.cli run generated/neon-echo
-```
-
-OSSスターターを取得:
+OSSスターター:
 
 ```bash
 python -m game_factory.cli vendor --recommended
 ```
 
-販売素材を生成:
+## AI planner
+
+任意のOpenAI-compatible / local LLM gatewayを差し込めます。Secretはリポジトリへ保存しません。
 
 ```bash
-python -m game_factory.cli pack generated/neon-echo --itch-target yourname/neon-echo
+export GAME_FACTORY_LLM_ENDPOINT="http://localhost:8000/v1/chat/completions"
+export GAME_FACTORY_LLM_MODEL="your-model"
+# 必要なgatewayだけ bearer を環境変数で設定
+export GAME_FACTORY_LLM_BEARER="..."
+python -m game_factory.cli batch --ai --count 30 --keep 5 --seed 2026 --out portfolio
 ```
 
-## 自律ループ
+LLM出力は直接コードへせず、必ずGameSpecへ正規化してから後段へ渡します。APIが返した候補が不足した場合は決定論的generatorで補完します。
+
+## Feedback loop
 
 ```bash
-python -m game_factory.cli batch --count 30 --keep 5 --seed 2026 --out portfolio
+python -m game_factory.cli learn examples/metrics.csv --out state/learned_preferences.json
+python -m game_factory.cli batch --count 30 --keep 5 --preferences state/learned_preferences.json --out portfolio-2
 ```
 
-`metrics.csv` を投入して、次のbatchに市場フィードバックを反映できます。
+`docs/ARCHITECTURE.md`, `docs/STORE_PLAYBOOK.md`, `docs/RESEARCH.md` 参照。
 
-```bash
-python -m game_factory.cli learn metrics.csv --out state/learned_preferences.json
-python -m game_factory.cli batch --count 30 --keep 5 --seed 2027 --preferences state/learned_preferences.json --out portfolio-2
-```
+## License
 
-## 設計思想
-
-量産の単位を「コードコピー」ではなく **GameSpec** にしています。同じエンジン・同じ検証基盤の上で、企画、ルール、パラメータ、見た目、ストア訴求を別データとして変えるため、AIが大量に提案しても壊れにくくなります。
-
-詳しくは `docs/ARCHITECTURE.md`、販売運用は `docs/STORE_PLAYBOOK.md`、調査元は `docs/RESEARCH.md` を参照してください。
-
-## ライセンス
-
-このリポジトリ自身は MIT License。cloneする外部OSSは各リポジトリのライセンスに従います。`vendor.lock.json` に取得commitを記録します。外部アセットはコードと別にライセンス確認してください。
+本リポジトリはMIT。外部OSSとアセットは各ライセンスを保持し、商用採用前に個別監査します。

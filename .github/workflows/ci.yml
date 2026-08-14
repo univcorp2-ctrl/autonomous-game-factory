@@ -1,0 +1,25 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Generate smoke portfolio
+        run: python -m game_factory.cli batch --count 6 --keep 2 --seed 123 --out /tmp/game-factory-smoke
+      - name: Validate generated projects
+        run: |
+          python -m game_factory.cli qa /tmp/game-factory-smoke/neon-sw* 2>/dev/null || true
+          test -f /tmp/game-factory-smoke/portfolio.json

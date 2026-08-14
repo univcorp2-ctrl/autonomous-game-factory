@@ -1,0 +1,23 @@
+{
+  "title": "Neon Harvest",
+  "mode": "survivor",
+  "seed": 20260814,
+  "tagline": "Harvest the light while the swarm closes in.",
+  "hooks": [
+    "pickups force route-planning decisions",
+    "difficulty rises every 15 seconds",
+    "short runs with immediate restarts"
+  ],
+  "tags": ["indie", "arcade", "survivor", "short-session", "replayable"],
+  "price_hint_usd": 4.99,
+  "mechanics": {
+    "player_speed": 310,
+    "enemy_speed": 105,
+    "spawn_interval": 0.78,
+    "pickup_interval": 1.8,
+    "enemy_limit": 42,
+    "target_score": 24,
+    "time_limit": 75,
+    "health": 3
+  }
+}

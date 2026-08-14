@@ -1,38 +1,38 @@
 # Research notes — 2026-08-14
 
-## Core engine / automation
+## Closest autonomous predecessors
 
-- Godot Engine — MIT licensed, cross-platform, CLI/headless export support.
-- Godot demo projects — official MIT-licensed demos.
-- JAMER / JamSet / JamBench (2026) — GodotのGame Jam由来プロジェクトを大規模に検証し、project-level生成/評価へ利用する研究。8,133 verified projectsを報告。
-- abagames/headless-godot-skill-kit — editorを開かずにagentでGodotを扱うためのMIT kit.
-- crystal-bit/godot-game-template — 汎用Godot starter + CI patterns, MIT.
+### Godogen
 
-## Genre starters
+MIT. Godot / Bevy / Babylon.jsを対象に、短い説明からagentがゲームを作り、asset生成、engine実行、録画またはlive gameで結果を確認する設計。重要な学びは **compile成功ではなくrunning resultを証拠にして反復する** 点。
 
-- KenneyNL/Starter-Kit-FPS — Godot 4.6, MIT, bundled assets documented CC0.
-- KenneyNL/Starter-Kit-3D-Platformer — Godot 4.6, MIT, bundled assets documented CC0.
-- KenneyNL/Starter-Kit-Racing — Godot 4.6, MIT, bundled assets documented CC0.
-- KenneyNL/Starter-Kit-City-Builder — Godot 4.6, MIT, bundled assets documented CC0.
-- gdquest-demos/godot-open-rpg — turn-based RPG demo, MIT; bundled credits must still be reviewed.
-- InvadingOctopus/comedot — component-based Godot framework for many 2D genres, MIT.
+### Everything Game Dev Code
 
-## Commercial proof that Godot is viable
+MIT. Unity / Unreal / Godot / Webを共通studio workflowで扱い、GDD、TDD、asset generation、QA、release/live opsまでレイヤー化するscaffold。重要な学びは **engine固有層と共通productionルールを分離する** 点。
 
-Godotの公式Showcaseには Brotato, Dome Keeper, Cassette Beasts, Halls of Torment, Buckshot Roulette などの販売作品が掲載されています。ここから学ぶべきなのは「同じゲームを複製すること」ではなく、**強い一文フック、短い説明で理解できるcore loop、反復可能なrun、十分なpolish**です。
+### JAMER / JamSet / JamBench
+
+2026年の研究。Godot Game Jam由来の大規模repository集合をproject-level game generationの学習/評価へ利用し、8,133 verified projectsを報告。大きいprojectほどagentのruntime成功率が急落するため、小さなarchetype + deterministic QA +段階的拡張が現実的。
+
+### GameCraft-Bench
+
+2026年のGodotベンチマーク。140 tasks / 15 game familiesでend-to-end playable game generationを評価し、強いagentでも完全なゲーム生成はまだ難しいと報告。したがって本factoryは「AIに全部任せて大量push」ではなく、テンプレート、QA、実行証拠、release gateを固定する。
+
+## OSS / genre sources
+
+- Godot Engine / official demos — MIT, headless/CLI export.
+- abagames/headless-godot-skill-kit — MIT.
+- crystal-bit/godot-game-template — MIT.
+- Kenney Starter Kit FPS / 3D Platformer / Racing / City Builder — MIT, bundled assets documented CC0.
+- gdquest-demos/godot-open-rpg — MIT; asset credits review required.
+- InvadingOctopus/comedot — MIT component framework.
+- GodotSteam — MIT Steam integration ecosystem.
+
+## Commercial proof
+
+Godot公式Showcaseには Brotato, Dome Keeper, Cassette Beasts, Halls of Torment, Buckshot Roulette などが掲載されている。模倣対象ではなく、強い一文hook、明快なcore loop、repeatability、polishの成功パターンを抽象化して使う。
 
 ## Distribution
 
-- itch.io butler — CLI build upload.
-- SteamPipe — Steamworks build upload.
-- Steam Store page / build はValve reviewを通す必要があるため、releaseは完全無人化対象にしない。
-
-## URLs
-
-- https://godotengine.org/license/
-- https://docs.godotengine.org/en/stable/tutorials/editor/command_line_tutorial.html
-- https://itch.io/docs/butler/
-- https://partner.steamgames.com/doc/sdk/uploading
-- https://partner.steamgames.com/doc/store/review_process
-- https://godotengine.org/showcase/
-- https://arxiv.org/abs/2606.19830
+- itch.io: butler CLIでbuild upload可能。
+- Steam: SteamPipeでbuild upload可能。ただしStore Presence / content survey / review / Coming Soon / final releaseはpublisher/Valve側の明示工程を残す。

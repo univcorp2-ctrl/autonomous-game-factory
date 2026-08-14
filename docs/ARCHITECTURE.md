@@ -1,40 +1,29 @@
 # Architecture
 
-## 1. Portfolio loop
+## Portfolio loop
 
-1. **Ideation** — `GameSpec` をseed付きで生成
-2. **Dedup** — mechanics / hooks / palette のfingerprintで重複を落とす
-3. **Ranking** — pacing、hook数、readability、価格仮説で上位だけ残す
-4. **Generation** — Godotテンプレートへ `game_spec.json` を注入
-5. **QA** — 構成、Spec整合性、パラメータ外れ値を確認。Godotがあればheadless smoke test
-6. **Marketing Pack** — Store copy / social / trailer shot list / asset manifest生成
-7. **Release Pack** — itch `butler` とSteamPipe準備ファイル生成
-8. **Human / Store Gate** — 契約、価格、年齢/内容申告、審査、最終リリース
-9. **Feedback** — wishlist / conversion / review / playtime / refund をCSVで戻す
-10. **Next generation** — 実績の良いmodeの企画比率を上げる
+1. **Ideation** — deterministic generator または外部LLMからGameSpec生成
+2. **Normalize** — LLM出力を許可mode/parameter schemaへ閉じ込める
+3. **Dedup** — mechanics / hooks / palette fingerprint
+4. **Rank** — hook/pacing/readability/price仮説
+5. **Generate** — Godot text template + game_spec.json
+6. **QA** — file/spec checks + optional Godot headless run
+7. **Build** — Windows / Linux / Web export
+8. **Marketing** — store copy / social copy / trailer plan / asset manifest
+9. **Release pack** — itch butler / Steam manifest + release gates
+10. **Feedback** — wishlist/conversion/review/playtime/refund
+11. **Next generation** — successful mode weightsを更新
 
-## 2. なぜGodotか
+## Key principle: proof over claims
 
-- プロジェクトがテキスト中心でAI差分生成に向く
-- headless実行ができる
-- MITでエンジン自体を商用利用しやすい
-- 2D/3D/desktop/web/mobileを一つの制作基盤で扱える
-- Game Jam由来のOSSやテンプレートが豊富
+AIが「完成した」と言うことは品質証拠にしない。最低でもstatic QA、可能ならGodot headless run、最終的には画面/操作のplaytestを通す。大規模gameを一発生成せず、小さなarchetypeを確実に動かしてからgenre adapterを増やす。
 
-## 3. AIの差し替えポイント
+## External OSS policy
 
-現在の `ideation.py` は再現性のある決定論的生成です。ここをLLM/ローカルモデルに差し替えても、**出力をGameSpecへ正規化してから後段へ渡す**ことで、ゲームエンジンや販売パイプラインを壊さずに済みます。
+外部repositoryは `config/oss_sources.json` のallowlistからだけcloneし、取得commitとlicense fileを `vendor.lock.json` に記録する。外部コードをそのまま商品化するのではなく、architecture/reference/templateとして利用し、アセットlicenseと商標/IPを別チェックする。
 
-将来の追加候補:
+## Autonomy boundary
 
-- LLMによるGameSpec生成
-- 画像生成によるカプセル/ロゴ草案（最終アートは権利・ブランドチェック）
-- 自動プレイbotによる難易度推定
-- Gameplay telemetryからのパラメータ最適化
-- genre-specific templates: FPS / platformer / racing / city builder / RPG
+自動: ideation, code/spec generation, QA, build, marketing drafts, release package, analytics.
 
-## 4. 自律性の境界
-
-自動で行ってよいもの: 企画、コード生成、テスト、ビルド、コピー草案、素材チェックリスト、分析。
-
-明示ゲートを残すもの: 支払い、契約、ストア価格確定、法的申告、年齢区分、他者権利を含む素材採用、最終公開。
+明示gate: credentials, purchase/payment, contracts, legal/content declarations, store pricing, third-party IP approval, final release.

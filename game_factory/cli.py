@@ -2,17 +2,17 @@ from __future__ import annotations
 
 import argparse
 import json
-import subprocess
-import shutil
 from pathlib import Path
+from .ai_planner import generate_ai_ideas
 from .autopilot import run_batch
+from .build import build_project
 from .feedback import learn_preferences
 from .generator import generate_project
 from .ideation import generate_ideas, load_preferences
 from .oss import clone_sources
-from .qa import quality_score, run_headless, write_qa_report
+from .qa import run_headless, write_qa_report
 from .release import make_release_pack
-from .spec import load_spec, save_spec
+from .spec import load_spec
 
 
 def main() -> None:
@@ -23,6 +23,7 @@ def main() -> None:
     ideate.add_argument("--count", type=int, default=10)
     ideate.add_argument("--seed", type=int, default=1)
     ideate.add_argument("--preferences")
+    ideate.add_argument("--ai", action="store_true")
     ideate.add_argument("--out", default="ideas.json")
 
     make = sub.add_parser("make")
@@ -34,6 +35,7 @@ def main() -> None:
     batch.add_argument("--keep", type=int, default=3)
     batch.add_argument("--seed", type=int, default=1)
     batch.add_argument("--preferences")
+    batch.add_argument("--ai", action="store_true")
     batch.add_argument("--out", default="generated")
 
     qa = sub.add_parser("qa")
@@ -42,6 +44,12 @@ def main() -> None:
     run = sub.add_parser("run")
     run.add_argument("project")
     run.add_argument("--godot")
+
+    build = sub.add_parser("build")
+    build.add_argument("project")
+    build.add_argument("--targets", nargs="+", default=["windows", "linux", "web"])
+    build.add_argument("--godot")
+    build.add_argument("--dry-run", action="store_true")
 
     pack = sub.add_parser("pack")
     pack.add_argument("project")
@@ -59,13 +67,13 @@ def main() -> None:
     args = p.parse_args()
     if args.cmd == "ideate":
         weights = load_preferences(args.preferences)
-        ideas = generate_ideas(args.count, args.seed, weights)
+        ideas = generate_ai_ideas(args.count, args.seed, weights) if args.ai else generate_ideas(args.count, args.seed, weights)
         Path(args.out).write_text(json.dumps([x.to_dict() for x in ideas], ensure_ascii=False, indent=2), encoding="utf-8")
         print(args.out)
     elif args.cmd == "make":
         print(generate_project(load_spec(args.spec), args.out))
     elif args.cmd == "batch":
-        print(json.dumps(run_batch(args.count, args.keep, args.seed, args.out, args.preferences), indent=2))
+        print(json.dumps(run_batch(args.count, args.keep, args.seed, args.out, args.preferences, args.ai), indent=2))
     elif args.cmd == "qa":
         result = write_qa_report(args.project)
         print(json.dumps(result.to_dict(), indent=2))
@@ -74,6 +82,9 @@ def main() -> None:
         ok, output = run_headless(args.project, args.godot, frames=120)
         print(output)
         raise SystemExit(0 if ok else 2)
+    elif args.cmd == "build":
+        for cmd in build_project(args.project, args.targets, args.godot, args.dry_run):
+            print(" ".join(str(x) for x in cmd))
     elif args.cmd == "pack":
         print(make_release_pack(args.project, args.itch_target))
     elif args.cmd == "learn":

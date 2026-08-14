@@ -1,75 +1,17 @@
 {
   "schema": 1,
   "sources": [
-    {
-      "name": "godot-demo-projects",
-      "url": "https://github.com/godotengine/godot-demo-projects.git",
-      "license": "MIT",
-      "recommended": true,
-      "use": "official engine patterns and demos"
-    },
-    {
-      "name": "headless-godot-skill-kit",
-      "url": "https://github.com/abagames/headless-godot-skill-kit.git",
-      "license": "MIT",
-      "recommended": true,
-      "use": "agent-oriented headless development patterns"
-    },
-    {
-      "name": "godot-game-template",
-      "url": "https://github.com/crystal-bit/godot-game-template.git",
-      "license": "MIT",
-      "recommended": true,
-      "use": "generic project and CI patterns"
-    },
-    {
-      "name": "starter-kit-fps",
-      "url": "https://github.com/KenneyNL/Starter-Kit-FPS.git",
-      "license": "MIT; bundled assets documented CC0",
-      "recommended": true,
-      "use": "FPS archetype"
-    },
-    {
-      "name": "starter-kit-3d-platformer",
-      "url": "https://github.com/KenneyNL/Starter-Kit-3D-Platformer.git",
-      "license": "MIT; bundled assets documented CC0",
-      "recommended": true,
-      "use": "3D platformer archetype"
-    },
-    {
-      "name": "starter-kit-racing",
-      "url": "https://github.com/KenneyNL/Starter-Kit-Racing.git",
-      "license": "MIT; bundled assets documented CC0",
-      "recommended": true,
-      "use": "racing archetype"
-    },
-    {
-      "name": "starter-kit-city-builder",
-      "url": "https://github.com/KenneyNL/Starter-Kit-City-Builder.git",
-      "license": "MIT; bundled assets documented CC0",
-      "recommended": true,
-      "use": "city builder archetype"
-    },
-    {
-      "name": "godot-open-rpg",
-      "url": "https://github.com/gdquest-demos/godot-open-rpg.git",
-      "license": "MIT; inspect bundled asset credits separately",
-      "recommended": false,
-      "use": "turn-based RPG architecture"
-    },
-    {
-      "name": "comedot",
-      "url": "https://github.com/InvadingOctopus/comedot.git",
-      "license": "MIT",
-      "recommended": false,
-      "use": "component framework for many 2D genres"
-    },
-    {
-      "name": "godotsteam",
-      "url": "https://github.com/GodotSteam/GodotSteam.git",
-      "license": "MIT",
-      "recommended": false,
-      "use": "Steamworks integration when a title needs Steam APIs"
-    }
+    {"name":"godot-demo-projects","url":"https://github.com/godotengine/godot-demo-projects.git","license":"MIT","recommended":true,"use":"official engine patterns and demos"},
+    {"name":"headless-godot-skill-kit","url":"https://github.com/abagames/headless-godot-skill-kit.git","license":"MIT","recommended":true,"use":"agent-oriented headless development patterns"},
+    {"name":"godot-game-template","url":"https://github.com/crystal-bit/godot-game-template.git","license":"MIT","recommended":true,"use":"generic project and CI patterns"},
+    {"name":"starter-kit-fps","url":"https://github.com/KenneyNL/Starter-Kit-FPS.git","license":"MIT; bundled assets documented CC0","recommended":true,"use":"FPS archetype"},
+    {"name":"starter-kit-3d-platformer","url":"https://github.com/KenneyNL/Starter-Kit-3D-Platformer.git","license":"MIT; bundled assets documented CC0","recommended":true,"use":"3D platformer archetype"},
+    {"name":"starter-kit-racing","url":"https://github.com/KenneyNL/Starter-Kit-Racing.git","license":"MIT; bundled assets documented CC0","recommended":true,"use":"racing archetype"},
+    {"name":"starter-kit-city-builder","url":"https://github.com/KenneyNL/Starter-Kit-City-Builder.git","license":"MIT; bundled assets documented CC0","recommended":true,"use":"city builder archetype"},
+    {"name":"godogen","url":"https://github.com/htdt/godogen.git","license":"MIT","recommended":false,"use":"reference: autonomous build/assets/run/proof loop"},
+    {"name":"everything-game-dev-code","url":"https://github.com/MRCalderon3D/everything-game-dev-code.git","license":"MIT","recommended":false,"use":"reference: GDD/QA/release/live-ops studio workflow"},
+    {"name":"godot-open-rpg","url":"https://github.com/gdquest-demos/godot-open-rpg.git","license":"MIT; inspect bundled asset credits separately","recommended":false,"use":"turn-based RPG architecture"},
+    {"name":"comedot","url":"https://github.com/InvadingOctopus/comedot.git","license":"MIT","recommended":false,"use":"component framework for many 2D genres"},
+    {"name":"godotsteam","url":"https://github.com/GodotSteam/GodotSteam.git","license":"MIT","recommended":false,"use":"Steamworks integration when a title needs Steam APIs"}
   ]
 }
